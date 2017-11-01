@@ -1,5 +1,21 @@
 
 import * as THREE from 'three'
+
+import DB from './db.js';
+
+/*var config = {
+	apiKey: "AIzaSyCyZ4mlZFrTS9RiiDoR-YRn0cBA6GxySvc",
+	authDomain: "fishtank-b6f1f.firebaseapp.com",
+	databaseURL: "https://fishtank-b6f1f.firebaseio.com",
+	projectId: "fishtank-b6f1f",
+	storageBucket: "",
+	messagingSenderId: "995746268808"
+};*/
+//firebase.initializeApp(config);
+// Get a reference to the database service
+//var database = firebase.database();
+
+
 var OrbitControls = require('three-orbitcontrols')
 
 var camera;
@@ -44,6 +60,28 @@ function init() {
     // Add the orbit controls
     controls = new OrbitControls(camera, renderer.domElement);
     controls.target = new THREE.Vector3(0, 100, 0);
+
+    //setup firebase
+
+	var test = new DB("pieter","bos");
+
+	test.initFish();
+	test.setupFish(addFish);
+
+	console.log(test.getFullName());
+	test.pushFish()
+	setInterval( function(){
+		test.pushFish()
+	},1000);
+}
+
+function addFish(key,fish){
+	// Sphere
+	var ballMat = new THREE.MeshPhongMaterial( { color: 0xff0000, specular: 0x555555, shininess: 30 } );
+	console.log("Add the fish");
+	var sphere = new THREE.Mesh(new THREE.SphereGeometry(20, 70, 20), ballMat);
+	sphere.position.set(Math.floor(-50 + Math.random()*100 ), Math.floor(-50 + Math.random()*100 ), Math.floor(-Math.random()*100 ));
+	scene.add(sphere);
 }
 
 function addLights() {
@@ -116,15 +154,19 @@ function addSceneElements() {
     scene.add(knot);
 }
 
+
+
 function animate() {
     renderer.render( scene, camera );
     requestAnimationFrame( animate );
     controls.update();
-    counter += .001;
+    counter += .01;
     //greenPoint.position.x = -100; //Math.sin(counter) * 100;
     greenPoint.position.set( -70, 5, Math.sin(counter) * 100 );
     bluePoint.position.set( -Math.sin(counter) * 100 , 5, 70);
-    //knot.rotateZ( Math.sin(counter) * 100)
+
+
+    knot.rotateZ( Math.sin(counter/100) * 100)
     //console.log("sorry")
 }
 

@@ -20,12 +20,18 @@ module.exports = {
         filename:'[name].js'
     },
     module: {
-        rules: [
-            {
-                test: /\.(js|jsx)$/,
-                use: 'babel-loader'
-            }
-        ]
+		rules: [
+			{
+				test: /\.(js|jsx)$/,
+				exclude: "/node_modules/",
+				use: {
+					loader: 'babel-loader',
+					options: {
+						presets:[path.resolve(__dirname, "./node_modules/babel-preset-es2015"), path.resolve(__dirname, "./node_modules/babel-preset-react")]
+					}
+				}
+			}
+		]
     },
     plugins: [
         new webpack.optimize.UglifyJsPlugin(),
