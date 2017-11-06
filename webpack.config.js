@@ -2,6 +2,10 @@ const path = require("path");
 const webpack = require("webpack");
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
+const ConcatPlugin = require('webpack-concat-plugin');
+const modules = require("./src/modules.js");
+console.log(modules);
+
 const VENDOR_LIBS = [
     'three'
 ];
@@ -38,6 +42,14 @@ module.exports = {
         new webpack.optimize.CommonsChunkPlugin({
             names: ['vendor', 'manifest']
         }),
-        new HtmlWebpackPlugin({template: './src/index.html'})
+        new HtmlWebpackPlugin({template: './src/index.html'}),
+        new ConcatPlugin({
+            uglify: false, // or you can set uglifyjs options
+            useHash: false, // md5 file
+            sourceMap: true, // generate sourceMap
+            name: 'flexible', // used in html-webpack-plugin
+            fileName: '[name].bundle.js', // would output to 'flexible.d41d8cd98f00b204e980.bundle.js'
+            filesToConcat:modules
+        })
     ]
 };

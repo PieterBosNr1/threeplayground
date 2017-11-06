@@ -29,6 +29,9 @@ var bluePoint;
 var counter = 0;
 var knot;
 
+
+var halfPI = Math.PI/2;
+
 init();
 animate();
 
@@ -65,7 +68,7 @@ function init() {
 
 	var test = new DB("pieter","bos");
 
-	test.initFish();
+	//test.initFish();
 	test.setupFish(addFish);
 
 	console.log(test.getFullName());
@@ -73,16 +76,221 @@ function init() {
 	setInterval( function(){
 		test.pushFish()
 	},1000);
+
+    createFish().position.x = 100;
+
+    createFish().position.x = 50;
 }
 
-function addFish(key,fish){
+function __addFish(key,fish){
 	// Sphere
+
 	var ballMat = new THREE.MeshPhongMaterial( { color: 0xff0000, specular: 0x555555, shininess: 30 } );
 	console.log("Add the fish");
 	var sphere = new THREE.Mesh(new THREE.SphereGeometry(20, 70, 20), ballMat);
 	sphere.position.set(Math.floor(-50 + Math.random()*100 ), Math.floor(-50 + Math.random()*100 ), Math.floor(-Math.random()*100 ));
 	scene.add(sphere);
 }
+
+function addFish(key,fish){
+    // Sphere
+    console.log("Add the real fish");
+
+
+    var fish = createFish();
+    fish.rotation.order = 'YXZ';
+    //fish.scale.set(0.5,0.5,0,5);
+    fish.position.set(Math.floor(Math.random()*300 ), Math.floor( Math.random()*300 ), Math.floor(Math.random()*300 )+50);
+    fish.rotation.z = Math.random() * Math.PI;
+    fish.rotation.y = Math.random() * Math.PI;
+    fish.rotation.x = Math.random() * Math.PI;
+
+    fish.scale.set(0.1 + 0.1 * Math.random(),0.1 + 0.1 * Math.random(),0.1 + 0.1 * Math.random());
+
+    scene.add(fish);
+}
+
+function createFish(){
+
+
+// FISH BODY PARTS
+    var fish,
+        bodyFish,
+        tailFish,
+        topFish,
+        sideRightFish,
+        sideLeftFish,
+        rightIris,
+        leftIris,
+        rightEye,
+        leftEye,
+        lipsFish,
+        tooth1,
+        tooth2,
+        tooth3,
+        tooth4,
+        tooth5;
+
+    // A group that will contain each part of the fish
+    fish = new THREE.Group();
+    // each part needs a geometry, a material, and a mesh
+
+    // Body
+    var bodyGeom = new THREE.BoxGeometry(120, 120, 120);
+    var bodyMat = new THREE.MeshLambertMaterial({
+        color: Math.random() * 0xffffff ,
+        flatShading: THREE.FlatShading
+    });
+    bodyFish = new THREE.Mesh(bodyGeom, bodyMat);
+
+    // Tail
+    var tailGeom = new THREE.CylinderGeometry(0, 60, 60, 4, false);
+    var tailMat = new THREE.MeshLambertMaterial({
+        color: 0xff00dc,
+        flatShading: THREE.FlatShading
+    });
+
+    tailFish = new THREE.Mesh(tailGeom, tailMat);
+    tailFish.scale.set(.8,1,.1);
+    tailFish.position.x = -60;
+    tailFish.rotation.z = -halfPI;
+
+    // Lips
+    var lipsGeom = new THREE.BoxGeometry(25, 10, 120);
+    var lipsMat = new THREE.MeshLambertMaterial({
+        color: 0x80f5fe ,
+        flatShading: THREE.FlatShading
+    });
+    lipsFish = new THREE.Mesh(lipsGeom, lipsMat);
+    lipsFish.position.x = 65;
+    lipsFish.position.y = -47;
+    lipsFish.rotation.z = halfPI;
+
+    // Fins
+    topFish = new THREE.Mesh(tailGeom, tailMat);
+    topFish.scale.set(.8,1,.1);
+    topFish.position.x = -20;
+    topFish.position.y = 60;
+    topFish.rotation.z = -halfPI;
+
+    sideRightFish = new THREE.Mesh(tailGeom, tailMat);
+    sideRightFish.scale.set(.8,1,.1);
+    sideRightFish.rotation.x = halfPI;
+    sideRightFish.rotation.z = -halfPI;
+    sideRightFish.position.x = 0;
+    sideRightFish.position.y = -50;
+    sideRightFish.position.z = -60;
+
+    sideLeftFish = new THREE.Mesh(tailGeom, tailMat);
+    sideLeftFish.scale.set(.8,1,.1);
+    sideLeftFish.rotation.x = halfPI;
+    sideLeftFish.rotation.z = -halfPI;
+    sideLeftFish.position.x = 0;
+    sideLeftFish.position.y = -50;
+    sideLeftFish.position.z = 60;
+
+    // Eyes
+    var eyeGeom = new THREE.BoxGeometry(40, 40,5);
+    var eyeMat = new THREE.MeshLambertMaterial({
+        color: 0xffffff,
+        flatShading: THREE.FlatShading
+    });
+
+    rightEye = new THREE.Mesh(eyeGeom,eyeMat );
+    rightEye.position.z = -60;
+    rightEye.position.x = 25;
+    rightEye.position.y = -10;
+
+    var irisGeom = new THREE.BoxGeometry(10, 10,3);
+    var irisMat = new THREE.MeshLambertMaterial({
+        color: 0x330000,
+        flatShading: THREE.FlatShading
+    });
+
+    rightIris = new THREE.Mesh(irisGeom,irisMat );
+    rightIris.position.z = -65;
+    rightIris.position.x = 35;
+    rightIris.position.y = -10;
+
+    leftEye = new THREE.Mesh(eyeGeom,eyeMat );
+    leftEye.position.z = 60;
+    leftEye.position.x = 25;
+    leftEye.position.y = -10;
+
+    leftIris = new THREE.Mesh(irisGeom,irisMat );
+    leftIris.position.z = 65;
+    leftIris.position.x = 35;
+    leftIris.position.y = -10;
+
+    var toothGeom = new THREE.BoxGeometry(20, 4, 20);
+    var toothMat = new THREE.MeshLambertMaterial({
+        color: 0xffffff,
+        flatShading: THREE.FlatShading
+    });
+
+    // Teeth
+    tooth1 = new THREE.Mesh(toothGeom,toothMat);
+    tooth1.position.x = 65;
+    tooth1.position.y = -35;
+    tooth1.position.z = -50;
+    tooth1.rotation.z = halfPI;
+    tooth1.rotation.x = -halfPI;
+
+    tooth2 = new THREE.Mesh(toothGeom,toothMat);
+    tooth2.position.x = 65;
+    tooth2.position.y = -30;
+    tooth2.position.z = -25;
+    tooth2.rotation.z = halfPI;
+    tooth2.rotation.x = -Math.PI/12;
+
+    tooth3 = new THREE.Mesh(toothGeom,toothMat);
+    tooth3.position.x = 65;
+    tooth3.position.y = -25;
+    tooth3.position.z = 0;
+    tooth3.rotation.z = halfPI;
+
+    tooth4 = new THREE.Mesh(toothGeom,toothMat);
+    tooth4.position.x = 65;
+    tooth4.position.y = -30;
+    tooth4.position.z = 25;
+    tooth4.rotation.z = halfPI;
+    tooth4.rotation.x = Math.PI/12;
+
+    tooth5 = new THREE.Mesh(toothGeom,toothMat);
+    tooth5.position.x = 65;
+    tooth5.position.y = -35;
+    tooth5.position.z = 50;
+    tooth5.rotation.z = halfPI;
+    tooth5.rotation.x = Math.PI/8;
+
+
+    fish.add(bodyFish);
+    fish.add(tailFish);
+    fish.add(topFish);
+    fish.add(sideRightFish);
+    fish.add(sideLeftFish);
+    fish.add(rightEye);
+    fish.add(rightIris);
+    fish.add(leftEye);
+    fish.add(leftIris);
+    fish.add(tooth1);
+    fish.add(tooth2);
+    fish.add(tooth3);
+    fish.add(tooth4);
+    fish.add(tooth5);
+    fish.add(lipsFish);
+
+    fish.rotation.y = -Math.PI/4;
+
+    //scene.add(fish);
+
+
+
+    return fish;
+
+}
+
+
 
 function addLights() {
     var dirLight = new THREE.DirectionalLight(0xffffff, 1);
@@ -162,10 +370,10 @@ function animate() {
     controls.update();
     counter += .01;
     //greenPoint.position.x = -100; //Math.sin(counter) * 100;
-    greenPoint.position.set( -70, 5, Math.sin(counter) * 100 );
-    bluePoint.position.set( -Math.sin(counter) * 100 , 5, 70);
+    greenPoint.position.set( 0, 100, Math.sin(counter) * 400 );
+    bluePoint.position.set( -Math.sin(counter) * 400 , 5, 150);
 
-
+knot.scale.set(2,2,2);
     knot.rotateZ( Math.sin(counter/100) * 100)
     //console.log("sorry")
 }
