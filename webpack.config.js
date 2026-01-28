@@ -16,6 +16,7 @@ console.log('process.env', process.env.npm_lifecycle_event)
 module.exports = {
     entry: {
         bundle: './src/app.js',
+        'solar-system': './src/solar-system.js',
         vendor: VENDOR_LIBS
     },
 
@@ -42,7 +43,15 @@ module.exports = {
         new webpack.optimize.CommonsChunkPlugin({
             names: ['vendor', 'manifest']
         }),
-        new HtmlWebpackPlugin({template: './src/index.html'}),
+        new HtmlWebpackPlugin({
+            template: './src/index.html',
+            chunks: ['manifest', 'vendor', 'bundle']
+        }),
+        new HtmlWebpackPlugin({
+            template: './src/solar-system.html',
+            filename: 'solar-system.html',
+            chunks: ['manifest', 'vendor', 'solar-system']
+        }),
         new ConcatPlugin({
             uglify: false, // or you can set uglifyjs options
             useHash: false, // md5 file
